@@ -26,8 +26,7 @@
                     @endauth
                 </div>
             @endif
-
-            <div id='usercreate'></div>
+            <div id='usercreate' data='{{$data}}'></div>
         </div>
     </body>
     <script src="/js/app.js"></script>

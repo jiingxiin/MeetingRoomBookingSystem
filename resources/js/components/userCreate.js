@@ -1,18 +1,46 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Form, FormGroup, Col, Button, Input, Label } from 'reactstrap';
+import axios from 'axios';
 import dateFormat from 'dateformat';
 // import Date;
 
 export default class UserCreate extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props);
+        console.log('data from component', JSON.parse(this.props.data));
+        
         this.state = {
+            data: JSON.parse(this.props.data),
             bookings: [],
+            available: true,
             status: 1,
             newBookingData: {host: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
             duration: "", end_time: "", meeting_room_id: "" , status_id: 1},
         }
+    }
+    checkAvailable(booking_id, meeting_room, start_date, start_time, end_time){
+        // get the meeting_room_booking array, get those with approve status
+        let records = this.state.data.bookings.map((record) => {
+          // if booking_id is not same
+          if(record.id != booking_id){
+            // if booking meeting room is same
+            if(record.meeting_room_id != meeting_room){
+                // if date is same
+                if(record.start_date = start_date){
+                    // if end_time > bookingRecord.start_time  (check crash time)
+                    if(end_time > record.start_time){
+                        // if start_time < bookingRecord.end_time (check within duration?)
+                        if(start_time < record.end_time){
+                            let { available } = this.state
+                            available = false
+                            this.setState({available})
+                        }
+                    }
+                }
+            }
+          }  
+        })
     }
     addBooking(){
         // this.state.newBookingData.start_date = dateFormat(this.state.newBookingData.start_date, "yyyy-mm-dd")
@@ -35,6 +63,17 @@ export default class UserCreate extends Component {
         })
     }
     render() {
+        // let statusesData = Array.from(this.props.statuses)
+        let status = this.state.data.statuses.map((s) => {
+            return (
+                <option key={s.id} value={s.id}>{s.status}</option>
+            )
+        })
+        let rooms = this.state.data.rooms.map((r) => {
+            return (
+                <option key={r.id} value={r.id}>{r.name}</option>
+            )
+        })
         return (
             <div className="container">
                 <h1>Create Booking</h1>
@@ -122,7 +161,7 @@ export default class UserCreate extends Component {
                         />
                         </Col>
                     </FormGroup>
-                    <p>{this.state.newBookingData.start_date}</p>
+                    {/* <p>{this.state.newBookingData.start_date}</p> */}
                     <FormGroup row>
                         <Label for="start-time" sm={2}>Start Time</Label>
                         <Col sm={10}>
@@ -212,13 +251,14 @@ export default class UserCreate extends Component {
                             }}
                             type="select"
                         >
-                            <option value={0}>Select a room</option>
+                            {rooms}
+                            {/* <option value={0}>Select a room</option>
                             <option value={1}>Spiderman</option>
                             <option value={2}>Wonder Woman</option>
                             <option value={3}>Superman</option>
                             <option value={4}>Batman</option>
                             <option value={5}>Hulk</option>
-                            <option value={6}>Black Widow</option>
+                            <option value={6}>Black Widow</option> */}
                         </Input>
                         </Col>
                     </FormGroup>
@@ -237,10 +277,11 @@ export default class UserCreate extends Component {
                             type="select"
                             readOnly
                         >
-                            <option value={1}>Pending</option>
+                            {status}
+                            {/* <option value={1}>Pending</option>
                             <option value={2}>Approve</option>
                             <option value={3}>Cancel</option>
-                            <option value={4}>Deny</option>
+                            <option value={4}>Deny</option> */}
                         </Input>
                         </Col>
                     </FormGroup>
@@ -254,7 +295,8 @@ export default class UserCreate extends Component {
 // export default UserCreate;
 
 if (document.getElementById('usercreate')) {
-    ReactDOM.render(<UserCreate />, document.getElementById('usercreate'));
+    var data = document.getElementById('usercreate').getAttribute('data');
+    ReactDOM.render(<UserCreate data={data}/>, document.getElementById('usercreate'));
 }
 
 // Date.prototype.addMinutes = function(minutes) {

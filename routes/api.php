@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MeetingRoomBookingController;
+use App\Http\Controllers\StatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('bookings', [MeetingRoomBookingController::class, 'showAll']);
 Route::post('booking', [MeetingRoomBookingController::class, 'store']);
+Route::get('create', [StatusController::class, 'dropDownStatus']);

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MeetingRoomBooking;
 use Carbon\Carbon;
+use App\Models\Status; 
+use App\Models\MeetingRoom;
 
 class MeetingRoomBookingController extends Controller
 {
@@ -25,12 +27,27 @@ class MeetingRoomBookingController extends Controller
         $booking->meeting_room_id = $req->meeting_room_id;
         $booking->status_id = $req->status_id;
         $booking->save();
-        return redirect("/");
+        return redirect("/user/home");
         // return MeetingRoomBooking::create($req->all());
     }
 
     public function showAll()
     {
         return MeetingRoomBooking::all();
+    }
+
+    public function passInfo()
+    {
+        $data = array();
+        // $s = Status::all();
+        // $mr = MeetingRoom::all();
+        // foreach($s as $status){
+        //     array_push($data)
+        // }
+        $data['statuses'] = Status::all();
+        $data['rooms'] = MeetingRoom::all();
+        $data['bookings'] = MeetingRoomBooking::where('status_id',2)->get();
+        // return view('welcome', ['statuses'=>$statuses]);
+        return view('welcome')->with('data', json_encode($data));
     }
 }

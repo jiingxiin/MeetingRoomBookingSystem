@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\MeetingRoomController;
+use App\Http\Controllers\MeetingRoomBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/create', function () {
-    return view('welcome');
-});
+// Route::get('/create', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/create', [StatusController::class, 'dropDownStatus']);
+Route::get('/create', [MeetingRoomBookingController::class, 'passInfo']);
+// Route::get('/create', [MeetingRoomBookingController::class, 'dropDownMeetingRoom']);
+// Route::get('/create', [MeetingRoomController::class, 'dropDownMeetingRoom']);
 
 Route::get('/admin/home', function () {
     return view('admin-home');
