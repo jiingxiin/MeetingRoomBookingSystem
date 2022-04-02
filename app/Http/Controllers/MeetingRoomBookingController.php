@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\MeetingRoomBooking;
 use Carbon\Carbon;
 use App\Models\Status; 
+use App\Models\Level; 
 use App\Models\MeetingRoom;
 
 class MeetingRoomBookingController extends Controller
@@ -22,7 +23,6 @@ class MeetingRoomBookingController extends Controller
         $booking->level_id = $req->level_id;
         $booking->start_date = $req->start_date;;
         $booking->start_time = $req->start_time;
-        $booking->duration = $req->duration;
         $booking->end_time = $req->end_time;
         $booking->meeting_room_id = $req->meeting_room_id;
         $booking->status_id = $req->status_id;
@@ -47,6 +47,7 @@ class MeetingRoomBookingController extends Controller
         $data['statuses'] = Status::all();
         $data['rooms'] = MeetingRoom::all();
         $data['bookings'] = MeetingRoomBooking::where('status_id',2)->get();
+        $data['levels'] = Level::all();
         // return view('welcome', ['statuses'=>$statuses]);
         return view('welcome')->with('data', json_encode($data));
     }

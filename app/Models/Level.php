@@ -14,4 +14,8 @@ class Level extends Model
     public function getMeetingRoom(){
         return $this->hasMany(MeetingRoom::class);
     }
+
+    public function getMeetingRoomBooking(){
+        return $this->hasMany(MeetingRoomBooking::class);
+    }
 }

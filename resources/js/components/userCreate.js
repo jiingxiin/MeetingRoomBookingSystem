@@ -23,23 +23,23 @@ export default class UserCreate extends Component {
         // get the meeting_room_booking array, get those with approve status
         let records = this.state.data.bookings.map((record) => {
           // if booking_id is not same
-          if(record.id != booking_id){
-            // if booking meeting room is same
-            if(record.meeting_room_id != meeting_room){
-                // if date is same
-                if(record.start_date = start_date){
-                    // if end_time > bookingRecord.start_time  (check crash time)
-                    if(end_time > record.start_time){
-                        // if start_time < bookingRecord.end_time (check within duration?)
-                        if(start_time < record.end_time){
-                            let { available } = this.state
-                            available = false
-                            this.setState({available})
+            if(record.id != booking_id){
+                // if booking meeting room is same
+                    if(record.meeting_room_id != meeting_room){
+                    // if date is same
+                    if(record.start_date = start_date){
+                        // if end_time > bookingRecord.start_time  (check crash time)
+                        if(end_time > record.start_time){
+                            // if start_time < bookingRecord.end_time (check within duration?)
+                            if(start_time < record.end_time){
+                                let { available } = this.state
+                                available = false
+                                this.setState({available})
+                            }
                         }
                     }
                 }
-            }
-          }  
+            }  
         })
     }
     addBooking(){
@@ -56,14 +56,14 @@ export default class UserCreate extends Component {
             // this.loadBooking()
             this.setState({
                 bookings: [],
+                available: true,
                 status: 1,
-                newBookingData: {host: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "",  
+                newBookingData: {host: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
                 duration: "", end_time: "", meeting_room_id: "" , status_id: 1},
             })
         })
     }
     render() {
-        // let statusesData = Array.from(this.props.statuses)
         let status = this.state.data.statuses.map((s) => {
             return (
                 <option key={s.id} value={s.id}>{s.status}</option>
@@ -72,6 +72,11 @@ export default class UserCreate extends Component {
         let rooms = this.state.data.rooms.map((r) => {
             return (
                 <option key={r.id} value={r.id}>{r.name}</option>
+            )
+        })
+        let levels = this.state.data.levels.map((l) => {
+            return (
+                <option key={l.id} value={l.id}>{l.level}</option>
             )
         })
         return (
@@ -139,9 +144,10 @@ export default class UserCreate extends Component {
                             }}
                             type="select"
                         >
-                            <option>1</option>
+                            {levels}
+                            {/* <option>1</option>
                             <option>2</option>
-                            <option>3</option>
+                            <option>3</option> */}
                         </Input>
                         </Col>
                     </FormGroup>
@@ -180,46 +186,6 @@ export default class UserCreate extends Component {
                         </Col>
                     </FormGroup>
                     {/* <p>{this.state.newBookingData.start_time}</p> */}
-                    <FormGroup row>
-                        <Label for="duration" sm={2}>Duration</Label>
-                        <Col sm={10}>
-                        <Input
-                            id="duration"
-                            name="duration"
-                            onChange={(e) => {
-                                    let { newBookingData } = this.state
-                                    newBookingData.duration = e.target.value
-                                    this.setState({newBookingData})
-                                    // let start_datetime = Date(newBookingData.start_time))
-                                    // let cal_end_time = (Date.parse(newBookingData.start_time)).getTimes() + newBookingData.duration * 60000
-                                    // let cal_end_time = newBookingData.start_time
-                                    // let cal_end_time = cal_end_time.getMinutes() + newBookingData.duration
-                                    // let cal_end_time = moment().hour('12').minute('44').add(4,'hours').format("HH:mm");
-                                    // newBookingData.end_time = cal_end_time
-                                    // this.setState({newBookingData})
-                            }}
-                            type="select"
-                        >
-                            <option value={0}>Select duration</option>
-                            <option value={30}>30 mins</option>
-                            <option value={60}>1 hour</option>
-                            <option value={90}>1 hour 30 mins</option>
-                            <option value={120}>2 hours</option>
-                            <option value={150}>2 hours 30 mins</option>
-                            <option value={180}>3 hours</option>
-                            <option value={210}>3 hours 30 mins</option>
-                            <option value={240}>4 hours</option>
-                            <option value={270}>4 hours 30 mins</option>
-                            <option value={300}>5 hours</option>
-                            <option value={330}>5 hours 30 mins</option>
-                            <option value={360}>6 hours</option>
-                            <option value={390}>6 hours 30 mins</option>
-                            <option value={420}>7 hours</option>
-                            <option value={450}>7 hours 30 mins</option>
-                            <option value={480}>8 hours</option>
-                        </Input>
-                        </Col>
-                    </FormGroup>
                     <FormGroup row>
                         <Label for="end-time" sm={2}>End Time</Label>
                         <Col sm={10}>
@@ -275,7 +241,6 @@ export default class UserCreate extends Component {
                                     this.setState({newBookingData})
                             }} 
                             type="select"
-                            readOnly
                         >
                             {status}
                             {/* <option value={1}>Pending</option>

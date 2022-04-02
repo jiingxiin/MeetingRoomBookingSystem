@@ -21,7 +21,7 @@ class CreateMeetingRoomBookingsTable extends Migration
             $table->integer('level_id'); //foreign key to Levels
             $table->date('start_date');
             $table->time('start_time');
-            $table->integer('duration');
+            // $table->integer('duration');
             $table->time('end_time');
             $table->integer('meeting_room_id'); //foreign key to MeetingRooms
             $table->integer('status_id'); //foreign key to Statuses

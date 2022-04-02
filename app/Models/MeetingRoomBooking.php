@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Status;
 use App\Models\MeetingRoom;
 use App\Models\User;
+use App\Models\Level;
 
 class MeetingRoomBooking extends Model
 {
@@ -25,5 +26,9 @@ class MeetingRoomBooking extends Model
 
     public function getUser(){
         return $this->belongsTo(User::class);
+    }
+
+    public function getLevel(){
+        return $this->belongsTo(Level::class);
     }
 }

@@ -5629,6 +5629,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
 
         _this3.setState({
           bookings: [],
+          available: true,
           status: 1,
           newBookingData: {
             host: "",
@@ -5650,7 +5651,6 @@ var UserCreate = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this4 = this;
 
-      // let statusesData = Array.from(this.props.statuses)
       var status = this.state.data.statuses.map(function (s) {
         return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
           value: s.id,
@@ -5662,6 +5662,12 @@ var UserCreate = /*#__PURE__*/function (_Component) {
           value: r.id,
           children: r.name
         }, r.id);
+      });
+      var levels = this.state.data.levels.map(function (l) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
+          value: l.id,
+          children: l.level
+        }, l.id);
       });
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
         className: "container",
@@ -5745,7 +5751,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
               children: "Level"
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
               sm: 10,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
                 id: "level",
                 name: "level",
                 onChange: function onChange(e) {
@@ -5757,13 +5763,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
                   });
                 },
                 type: "select",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  children: "1"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  children: "2"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  children: "3"
-                })]
+                children: levels
               })
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
@@ -5810,87 +5810,6 @@ var UserCreate = /*#__PURE__*/function (_Component) {
                   });
                 },
                 type: "text"
-              })
-            })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
-            row: true,
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
-              "for": "duration",
-              sm: 2,
-              children: "Duration"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
-              sm: 10,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
-                id: "duration",
-                name: "duration",
-                onChange: function onChange(e) {
-                  var newBookingData = _this4.state.newBookingData;
-                  newBookingData.duration = e.target.value;
-
-                  _this4.setState({
-                    newBookingData: newBookingData
-                  }); // let start_datetime = Date(newBookingData.start_time))
-                  // let cal_end_time = (Date.parse(newBookingData.start_time)).getTimes() + newBookingData.duration * 60000
-                  // let cal_end_time = newBookingData.start_time
-                  // let cal_end_time = cal_end_time.getMinutes() + newBookingData.duration
-                  // let cal_end_time = moment().hour('12').minute('44').add(4,'hours').format("HH:mm");
-                  // newBookingData.end_time = cal_end_time
-                  // this.setState({newBookingData})
-
-                },
-                type: "select",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 0,
-                  children: "Select duration"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 30,
-                  children: "30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 60,
-                  children: "1 hour"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 90,
-                  children: "1 hour 30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 120,
-                  children: "2 hours"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 150,
-                  children: "2 hours 30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 180,
-                  children: "3 hours"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 210,
-                  children: "3 hours 30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 240,
-                  children: "4 hours"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 270,
-                  children: "4 hours 30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 300,
-                  children: "5 hours"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 330,
-                  children: "5 hours 30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 360,
-                  children: "6 hours"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 390,
-                  children: "6 hours 30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 420,
-                  children: "7 hours"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 450,
-                  children: "7 hours 30 mins"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
-                  value: 480,
-                  children: "8 hours"
-                })]
               })
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
@@ -5960,7 +5879,6 @@ var UserCreate = /*#__PURE__*/function (_Component) {
                   });
                 },
                 type: "select",
-                readOnly: true,
                 children: status
               })
             })]
