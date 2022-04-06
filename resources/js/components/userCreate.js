@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import { Form, FormGroup, Col, Button, Input, Label } from 'reactstrap';
 import axios from 'axios';
 import dateFormat from 'dateformat';
+import Moment from 'react-moment';
 // import Date;
 
 export default class UserCreate extends Component {
     constructor(props){
         super(props);
-        console.log('data from component', JSON.parse(this.props.data));
         
         this.state = {
             data: JSON.parse(this.props.data),
@@ -20,48 +20,71 @@ export default class UserCreate extends Component {
         }
     }
     checkAvailable(booking_id, meeting_room, start_date, start_time, end_time){
-        // get the meeting_room_booking array, get those with approve status
+        let allow = true;
+        
+        // change the time into minutes
+        const startTimeParts = start_time.split(":");
+        let startTime = parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
+
+        const endTimeParts = end_time.split(":");
+        let endTime = parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
+
         let records = this.state.data.bookings.map((record) => {
-          // if booking_id is not same
+            // change the time into minutes
+            const curr_startTimeParts = ((record.start_time).toString()).split(":");
+            let curr_startTime = parseInt(curr_startTimeParts[0]) * 60 + parseInt(curr_startTimeParts[1]);
+
+            const curr_endTimeParts = ((record.end_time).toString()).split(":");
+            let curr_endTime = parseInt(curr_endTimeParts[0]) * 60 + parseInt(curr_endTimeParts[1]);
+
+            // if booking_id is not same
             if(record.id != booking_id){
+                console.log("different booking")
+                console.log(booking_id)
                 // if booking meeting room is same
-                    if(record.meeting_room_id != meeting_room){
+                if(parseInt(record.meeting_room_id) == parseInt(meeting_room)){
+                    console.log("same meeting room")
+                    console.log(meeting_room)
                     // if date is same
-                    if(record.start_date = start_date){
-                        // if end_time > bookingRecord.start_time  (check crash time)
-                        if(end_time > record.start_time){
-                            // if start_time < bookingRecord.end_time (check within duration?)
-                            if(start_time < record.end_time){
-                                let { available } = this.state
-                                available = false
-                                this.setState({available})
+                    if((record.start_date).toString() == start_date){
+                        console.log("same date")
+                        console.log(start_date)
+                        // check crash time or not
+                        if(endTime > curr_startTime){
+                            console.log("crash time")
+                            // check within duration or not
+                            if(startTime < curr_endTime){
+                                console.log("within duration")
+                                    allow = false
                             }
                         }
                     }
                 }
-            }  
+            }
         })
+        return allow;
     }
     addBooking(){
-        // this.state.newBookingData.start_date = dateFormat(this.state.newBookingData.start_date, "yyyy-mm-dd")
-        // this.state.newBookingData.start_time = dateFormat(this.state.newBookingData.start_time, "isoTime")
-        // this.state.newBookingData.end_time = dateFormat(this.state.newBookingData.end_time, "isoTime")
-        // this.setState({newBookingData})
-        // console.log({newBookingData});
-        // console.log({newBookingData['start_time']});
-        // console.log({newBookingData['end_time']});
-        axios.post('http://127.0.0.1:8000/api/booking', this.state.newBookingData).then((response) => {
-            console.log("execute");
-            let {bookings} = this.state
-            // this.loadBooking()
-            this.setState({
-                bookings: [],
-                available: true,
-                status: 1,
-                newBookingData: {host: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
-                duration: "", end_time: "", meeting_room_id: "" , status_id: 1},
+        let available = this.checkAvailable(0,this.state.newBookingData.meeting_room_id, (this.state.newBookingData.start_date).toString(), this.state.newBookingData.start_time, this.state.newBookingData.end_time)
+        console.log(available)
+        
+        if (available){
+            axios.post('http://127.0.0.1:8000/api/booking', this.state.newBookingData).then((response) => {
+                console.log("execute");
+                let {bookings} = this.state
+                this.setState({
+                    bookings: [],
+                    available: true,
+                    status: 1,
+                    newBookingData: {host: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
+                    duration: "", end_time: "", meeting_room_id: "" , status_id: 1},
+                })
             })
-        })
+            location.replace("user/home");
+        }
+        else{
+            alert("This timeslot is not available. Please choose another timeslot");
+        }
     }
     render() {
         let status = this.state.data.statuses.map((s) => {
@@ -145,9 +168,6 @@ export default class UserCreate extends Component {
                             type="select"
                         >
                             {levels}
-                            {/* <option>1</option>
-                            <option>2</option>
-                            <option>3</option> */}
                         </Input>
                         </Col>
                     </FormGroup>
@@ -167,7 +187,6 @@ export default class UserCreate extends Component {
                         />
                         </Col>
                     </FormGroup>
-                    {/* <p>{this.state.newBookingData.start_date}</p> */}
                     <FormGroup row>
                         <Label for="start-time" sm={2}>Start Time</Label>
                         <Col sm={10}>
@@ -178,14 +197,12 @@ export default class UserCreate extends Component {
                             onChange={(e) => {
                                     let { newBookingData } = this.state
                                     newBookingData.start_time = e.target.value
-                                    // dateFormat(newBookingData.start_time, "isoTime")
                                     this.setState({newBookingData})
                             }}
                             type="text"
                         />
                         </Col>
                     </FormGroup>
-                    {/* <p>{this.state.newBookingData.start_time}</p> */}
                     <FormGroup row>
                         <Label for="end-time" sm={2}>End Time</Label>
                         <Col sm={10}>
@@ -196,14 +213,12 @@ export default class UserCreate extends Component {
                             onChange={(e) => {
                                     let { newBookingData } = this.state
                                     newBookingData.end_time = e.target.value
-                                    // dateFormat(newBookingData.end_time, "HH:MM:ss")
                                     this.setState({newBookingData})
                             }}
                             type="text"
                         />
                         </Col>
                     </FormGroup>
-                    {/* <p>{this.state.newBookingData.end_time}</p> */}
                     <FormGroup row>
                         <Label for="meeting-room" sm={2}>Meeting Room</Label>
                         <Col sm={10}>
@@ -218,13 +233,6 @@ export default class UserCreate extends Component {
                             type="select"
                         >
                             {rooms}
-                            {/* <option value={0}>Select a room</option>
-                            <option value={1}>Spiderman</option>
-                            <option value={2}>Wonder Woman</option>
-                            <option value={3}>Superman</option>
-                            <option value={4}>Batman</option>
-                            <option value={5}>Hulk</option>
-                            <option value={6}>Black Widow</option> */}
                         </Input>
                         </Col>
                     </FormGroup>
@@ -243,10 +251,6 @@ export default class UserCreate extends Component {
                             type="select"
                         >
                             {status}
-                            {/* <option value={1}>Pending</option>
-                            <option value={2}>Approve</option>
-                            <option value={3}>Cancel</option>
-                            <option value={4}>Deny</option> */}
                         </Input>
                         </Col>
                     </FormGroup>
@@ -263,9 +267,3 @@ if (document.getElementById('usercreate')) {
     var data = document.getElementById('usercreate').getAttribute('data');
     ReactDOM.render(<UserCreate data={data}/>, document.getElementById('usercreate'));
 }
-
-// Date.prototype.addMinutes = function(minutes) {
-//     this.setMinutes(this.getMinutes() + minutes);
-//     console.log(this);
-//     return this;
-// };
