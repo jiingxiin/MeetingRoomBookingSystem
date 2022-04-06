@@ -83,7 +83,7 @@ export default class UserCreate extends Component {
             location.replace("user/home");
         }
         else{
-            alert("This timeslot is not available. Please choose another timeslot");
+            alert("This timeslot is not available. Please choose another timeslot or meeting_room.");
         }
     }
     render() {
