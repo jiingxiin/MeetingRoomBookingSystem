@@ -39,16 +39,10 @@ class MeetingRoomBookingController extends Controller
     public function passInfo()
     {
         $data = array();
-        // $s = Status::all();
-        // $mr = MeetingRoom::all();
-        // foreach($s as $status){
-        //     array_push($data)
-        // }
         $data['statuses'] = Status::all();
         $data['rooms'] = MeetingRoom::all();
         $data['bookings'] = MeetingRoomBooking::where('status_id',2)->get();
         $data['levels'] = Level::all();
-        // return view('welcome', ['statuses'=>$statuses]);
         return view('welcome')->with('data', json_encode($data));
     }
 }

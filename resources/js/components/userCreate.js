@@ -4,7 +4,6 @@ import { Form, FormGroup, Col, Button, Input, Label } from 'reactstrap';
 import axios from 'axios';
 import dateFormat from 'dateformat';
 import Moment from 'react-moment';
-// import Date;
 
 export default class UserCreate extends Component {
     constructor(props){
@@ -66,11 +65,9 @@ export default class UserCreate extends Component {
     }
     addBooking(){
         let available = this.checkAvailable(0,this.state.newBookingData.meeting_room_id, (this.state.newBookingData.start_date).toString(), this.state.newBookingData.start_time, this.state.newBookingData.end_time)
-        console.log(available)
         
         if (available){
             axios.post('http://127.0.0.1:8000/api/booking', this.state.newBookingData).then((response) => {
-                console.log("execute");
                 let {bookings} = this.state
                 this.setState({
                     bookings: [],
@@ -260,8 +257,6 @@ export default class UserCreate extends Component {
         );
     }
 }
-
-// export default UserCreate;
 
 if (document.getElementById('usercreate')) {
     var data = document.getElementById('usercreate').getAttribute('data');

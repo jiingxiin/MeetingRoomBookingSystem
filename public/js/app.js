@@ -5546,7 +5546,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
- // import Date;
 
 
 
@@ -5631,11 +5630,9 @@ var UserCreate = /*#__PURE__*/function (_Component) {
       var _this2 = this;
 
       var available = this.checkAvailable(0, this.state.newBookingData.meeting_room_id, this.state.newBookingData.start_date.toString(), this.state.newBookingData.start_time, this.state.newBookingData.end_time);
-      console.log(available);
 
       if (available) {
         axios__WEBPACK_IMPORTED_MODULE_2___default().post('http://127.0.0.1:8000/api/booking', this.state.newBookingData).then(function (response) {
-          console.log("execute");
           var bookings = _this2.state.bookings;
 
           _this2.setState({
@@ -5658,7 +5655,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
         });
         location.replace("user/home");
       } else {
-        alert("This timeslot is not available. Please choose another timeslot");
+        alert("This timeslot is not available. Please choose another timeslot or meeting_room.");
       }
     }
   }, {
@@ -5908,8 +5905,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
   }]);
 
   return UserCreate;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component); // export default UserCreate;
-
+}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
 
 
