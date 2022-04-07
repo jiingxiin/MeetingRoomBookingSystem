@@ -16,6 +16,17 @@ class MeetingRoomBookingController extends Controller
         // $startDate = $req->start_date->toTimeString();
         // $startTime = $req->end_time->toTimeString();
         // $endTime = $req->end_time->toTimeString();
+        $this->validate($req, [
+            'host_id' => 'required | integer',
+            'purpose' => 'required | string',
+            'pax' => 'required | integer',
+            'level_id' => 'required | integer',
+            'start_date' => 'required | date_format:Y-m-d',
+            'start_time' => 'required | date_format:H:i',
+            'end_time' => 'required | after:start_time',
+            'meeting_room_id' => 'required | integer',
+            'status_id' => 'required | integer'
+        ]);
         $booking = new MeetingRoomBooking;
         $booking->host_id = $req->host_id;
         $booking->purpose = $req->purpose;

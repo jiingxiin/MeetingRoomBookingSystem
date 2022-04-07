@@ -8,7 +8,7 @@ import axios from 'axios';
 export default class AdminHome extends Component {
     constructor(props){
         super(props)
-        console.log('data from component', JSON.parse(this.props.data));
+        // console.log('data from component', JSON.parse(this.props.data));
         this.state = {
             data: JSON.parse(this.props.data),
             bookings: [],
@@ -96,7 +96,6 @@ export default class AdminHome extends Component {
     }
     updateBooking(){
         let available = this.checkAvailable(this.state.updateBookingData.id,this.state.updateBookingData.meeting_room_id, (this.state.updateBookingData.start_date).toString(), this.state.updateBookingData.start_time, this.state.updateBookingData.end_time)
-        console.log(available)
         if (available) {
             let {id, host_id, purpose, pax, level_id, start_date, start_time, end_time, meeting_room_id, status_id} = this.state.updateBookingData;
             axios.put('http://127.0.0.1:8000/api/bookings/update/'+id, {host_id, purpose, pax, level_id, start_date, start_time, end_time, meeting_room_id, status_id}).then((response) => {
@@ -151,10 +150,8 @@ export default class AdminHome extends Component {
                     <td>
                         <Button onClick={this.toggleUpdateBookingModal.bind(this, booking.id, booking.host_id, booking.purpose, booking.pax, booking.level_id, 
                             booking.start_date, booking.start_time, booking.end_time, booking.meeting_room_id, booking.status_id)} color="success" size="sm">
-                        {/* // onClick={this.callUpdateBooking.bind(this, booking.id, booking.host, booking.start_date, booking.status)}> */}
                         Edit</Button>{'  '}
                         <Button onClick={this.deleteBooking.bind(this, booking.id)} color="danger" size="sm">
-                        {/* // onClick={this.deleteBooking.bind(this, booking.id)}> */}
                         Delete</Button>
                     </td>
                 </tr>
@@ -261,9 +258,6 @@ export default class AdminHome extends Component {
                                     type="select"
                                 >
                                     {levels}
-                                    {/* <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option> */}
                                 </Input>
                                 </Col>
                             </FormGroup>
@@ -295,14 +289,12 @@ export default class AdminHome extends Component {
                                     onChange={(e) => {
                                             let { updateBookingData } = this.state
                                             updateBookingData.start_time = e.target.value
-                                            // dateFormat(newBookingData.start_time, "isoTime")
                                             this.setState({updateBookingData})
                                     }}
                                     type="text"
                                 />
                                 </Col>
                             </FormGroup>
-                            {/* <p>{this.state.newBookingData.start_time}</p> */}
                             <FormGroup row>
                                 <Label for="end-time" sm={2}>End Time</Label>
                                 <Col sm={10}>
@@ -313,14 +305,12 @@ export default class AdminHome extends Component {
                                     onChange={(e) => {
                                             let { updateBookingData } = this.state
                                             updateBookingData.end_time = e.target.value
-                                            // dateFormat(newBookingData.end_time, "HH:MM:ss")
                                             this.setState({updateBookingData})
                                     }}
                                     type="text"
                                 />
                                 </Col>
                             </FormGroup>
-                            {/* <p>{this.state.newBookingData.end_time}</p> */}
                             <FormGroup row>
                                 <Label for="meeting-room" sm={2}>Meeting Room</Label>
                                 <Col sm={10}>
@@ -336,13 +326,6 @@ export default class AdminHome extends Component {
                                     type="select"
                                 >
                                     {rooms}
-                                    {/* <option value={0}>Select a room</option>
-                                    <option value={1}>Spiderman</option>
-                                    <option value={2}>Wonder Woman</option>
-                                    <option value={3}>Superman</option>
-                                    <option value={4}>Batman</option>
-                                    <option value={5}>Hulk</option>
-                                    <option value={6}>Black Widow</option> */}
                                 </Input>
                                 </Col>
                             </FormGroup>
@@ -361,10 +344,6 @@ export default class AdminHome extends Component {
                                     type="select"
                                 >
                                     {status}
-                                    {/* <option value={1}>Pending</option>
-                                    <option value={2}>Approve</option>
-                                    <option value={3}>Cancel</option>
-                                    <option value={4}>Deny</option> */}
                                 </Input>
                                 </Col>
                             </FormGroup>
@@ -395,15 +374,8 @@ export default class AdminHome extends Component {
     }
 }
 
-// export default UserCreate;
-
 if (document.getElementById('adminhome')) {
     var data = document.getElementById('adminhome').getAttribute('data');
     ReactDOM.render(<AdminHome data={data}/>, document.getElementById('adminhome'));
 }
 
-// Date.prototype.addMinutes = function(minutes) {
-//     this.setMinutes(this.getMinutes() + minutes);
-//     console.log(this);
-//     return this;
-// };

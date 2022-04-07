@@ -5377,8 +5377,8 @@ var AdminHome = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, AdminHome);
 
-    _this = _super.call(this, props);
-    console.log('data from component', JSON.parse(_this.props.data));
+    _this = _super.call(this, props); // console.log('data from component', JSON.parse(this.props.data));
+
     _this.state = {
       data: JSON.parse(_this.props.data),
       bookings: [],
@@ -5511,7 +5511,6 @@ var AdminHome = /*#__PURE__*/function (_Component) {
       var _this3 = this;
 
       var available = this.checkAvailable(this.state.updateBookingData.id, this.state.updateBookingData.meeting_room_id, this.state.updateBookingData.start_date.toString(), this.state.updateBookingData.start_time, this.state.updateBookingData.end_time);
-      console.log(available);
 
       if (available) {
         var _this$state$updateBoo = this.state.updateBookingData,
@@ -5804,7 +5803,7 @@ var AdminHome = /*#__PURE__*/function (_Component) {
                     value: this.state.updateBookingData.start_time,
                     onChange: function onChange(e) {
                       var updateBookingData = _this5.state.updateBookingData;
-                      updateBookingData.start_time = e.target.value; // dateFormat(newBookingData.start_time, "isoTime")
+                      updateBookingData.start_time = e.target.value;
 
                       _this5.setState({
                         updateBookingData: updateBookingData
@@ -5827,7 +5826,7 @@ var AdminHome = /*#__PURE__*/function (_Component) {
                     value: this.state.updateBookingData.end_time,
                     onChange: function onChange(e) {
                       var updateBookingData = _this5.state.updateBookingData;
-                      updateBookingData.end_time = e.target.value; // dateFormat(newBookingData.end_time, "HH:MM:ss")
+                      updateBookingData.end_time = e.target.value;
 
                       _this5.setState({
                         updateBookingData: updateBookingData
@@ -5927,8 +5926,7 @@ var AdminHome = /*#__PURE__*/function (_Component) {
   }]);
 
   return AdminHome;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component); // export default UserCreate;
-
+}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
 
 
@@ -5937,11 +5935,7 @@ if (document.getElementById('adminhome')) {
   react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(AdminHome, {
     data: data
   }), document.getElementById('adminhome'));
-} // Date.prototype.addMinutes = function(minutes) {
-//     this.setMinutes(this.getMinutes() + minutes);
-//     console.log(this);
-//     return this;
-// };
+}
 
 /***/ }),
 
