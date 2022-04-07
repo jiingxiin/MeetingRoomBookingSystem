@@ -13,8 +13,8 @@ class MeetingRoomBooking extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['host', 'purpose', 'pax', 'level_id', 'start_date', 'start_time', 
-    'duration', 'end_time', 'meeting_room_id', 'status_id'];
+    protected $fillable = ['host_id', 'purpose', 'pax', 'level_id', 'start_date', 'start_time', 
+    'end_time', 'meeting_room_id', 'status_id'];
 
     public function getStatus(){
         return $this->belongsTo(Status::class);

@@ -23,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('bookings', [MeetingRoomBookingController::class, 'showAll']);
 Route::post('booking', [MeetingRoomBookingController::class, 'store']);
 Route::get('create', [StatusController::class, 'dropDownStatus']);
+Route::put('/bookings/update/{id}', [MeetingRoomBookingController::class, 'update']);
+Route::delete('/bookings/delete/{id}', [MeetingRoomBookingController::class, 'delete']);
