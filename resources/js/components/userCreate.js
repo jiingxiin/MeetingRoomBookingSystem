@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Form, FormGroup, Col, Button, Input, Label } from 'reactstrap';
 import axios from 'axios';
 import dateFormat from 'dateformat';
-import Moment from 'react-moment';
+
 
 export default class UserCreate extends Component {
     constructor(props){
@@ -14,7 +14,7 @@ export default class UserCreate extends Component {
             bookings: [],
             available: true,
             status: 1,
-            newBookingData: {host: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
+            newBookingData: {host_id: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
             duration: "", end_time: "", meeting_room_id: "" , status_id: 1},
         }
     }
@@ -73,7 +73,7 @@ export default class UserCreate extends Component {
                     bookings: [],
                     available: true,
                     status: 1,
-                    newBookingData: {host: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
+                    newBookingData: {host_id: "", purpose: "", pax: "", level_id: "", start_date: "", start_time: "", 
                     duration: "", end_time: "", meeting_room_id: "" , status_id: 1},
                 })
             })
@@ -104,18 +104,18 @@ export default class UserCreate extends Component {
                 <h1>Create Booking</h1>
                 <Form>
                     <FormGroup row>
-                        <Label for="host" sm={2}>Host</Label>
+                        <Label for="host_id" sm={2}>Host ID</Label>
                         <Col sm={10}>
                         <Input
-                            id="host"
-                            name="host"
-                            placeholder="name"
+                            id="host_id"
+                            name="host_id"
+                            placeholder="host ID"
                             onChange={(e) => {
                                     let { newBookingData } = this.state
-                                    newBookingData.host = e.target.value
+                                    newBookingData.host_id = e.target.value
                                     this.setState({newBookingData})
                             }}
-                            type="text"
+                            type="number"
                         />
                         </Col>
                     </FormGroup>
