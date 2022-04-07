@@ -5383,6 +5383,7 @@ var AdminHome = /*#__PURE__*/function (_Component) {
       data: JSON.parse(_this.props.data),
       bookings: [],
       status: 1,
+      available: true,
       newBookingData: {
         host_id: "",
         purpose: "",
@@ -5414,6 +5415,48 @@ var AdminHome = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(AdminHome, [{
+    key: "checkAvailable",
+    value: function checkAvailable(booking_id, meeting_room, start_date, start_time, end_time) {
+      var allow = true; // change the time into minutes
+
+      var startTimeParts = start_time.split(":");
+      var startTime = parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
+      var endTimeParts = end_time.split(":");
+      var endTime = parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
+      var records = this.state.data.bookings.map(function (record) {
+        // change the time into minutes
+        var curr_startTimeParts = record.start_time.toString().split(":");
+        var curr_startTime = parseInt(curr_startTimeParts[0]) * 60 + parseInt(curr_startTimeParts[1]);
+        var curr_endTimeParts = record.end_time.toString().split(":");
+        var curr_endTime = parseInt(curr_endTimeParts[0]) * 60 + parseInt(curr_endTimeParts[1]); // if booking_id is not same
+
+        if (record.id != booking_id) {
+          console.log("different booking");
+          console.log(booking_id); // if booking meeting room is same
+
+          if (parseInt(record.meeting_room_id) == parseInt(meeting_room)) {
+            console.log("same meeting room");
+            console.log(meeting_room); // if date is same
+
+            if (record.start_date.toString() == start_date) {
+              console.log("same date");
+              console.log(start_date); // check crash time or not
+
+              if (endTime > curr_startTime) {
+                console.log("crash time"); // check within duration or not
+
+                if (startTime < curr_endTime) {
+                  console.log("within duration");
+                  allow = false;
+                }
+              }
+            }
+          }
+        }
+      });
+      return allow;
+    }
+  }, {
     key: "loadBooking",
     value: function loadBooking() {
       var _this2 = this;
@@ -5432,8 +5475,6 @@ var AdminHome = /*#__PURE__*/function (_Component) {
   }, {
     key: "toggleUpdateBookingModal",
     value: function toggleUpdateBookingModal(id, host_id, purpose, pax, level_id, start_date, start_time, end_time, meeting_room_id, status_id) {
-      console.log('clikec');
-      console.log(this.state.updateBookingModal);
       this.setState({
         updateBookingData: {
           id: id,
@@ -5469,49 +5510,54 @@ var AdminHome = /*#__PURE__*/function (_Component) {
     value: function updateBooking() {
       var _this3 = this;
 
-      var _this$state$updateBoo = this.state.updateBookingData,
-          id = _this$state$updateBoo.id,
-          host_id = _this$state$updateBoo.host_id,
-          purpose = _this$state$updateBoo.purpose,
-          pax = _this$state$updateBoo.pax,
-          level_id = _this$state$updateBoo.level_id,
-          start_date = _this$state$updateBoo.start_date,
-          start_time = _this$state$updateBoo.start_time,
-          end_time = _this$state$updateBoo.end_time,
-          meeting_room_id = _this$state$updateBoo.meeting_room_id,
-          status_id = _this$state$updateBoo.status_id;
-      axios__WEBPACK_IMPORTED_MODULE_3___default().put('http://127.0.0.1:8000/api/bookings/update/' + id, {
-        host_id: host_id,
-        purpose: purpose,
-        pax: pax,
-        level_id: level_id,
-        start_date: start_date,
-        start_time: start_time,
-        end_time: end_time,
-        meeting_room_id: meeting_room_id,
-        status_id: status_id
-      }).then(function (response) {
-        console.log("execute");
+      var available = this.checkAvailable(this.state.updateBookingData.id, this.state.updateBookingData.meeting_room_id, this.state.updateBookingData.start_date.toString(), this.state.updateBookingData.start_time, this.state.updateBookingData.end_time);
+      console.log(available);
 
-        _this3.setState({
-          updateNotiModal: true,
-          updateBookingData: {
-            id: "",
-            host_id: "",
-            purpose: "",
-            pax: "",
-            level_id: "",
-            start_date: "",
-            start_time: "",
-            end_time: "",
-            meeting_room_id: "",
-            status_id: 1
-          },
-          updateBookingModal: false
+      if (available) {
+        var _this$state$updateBoo = this.state.updateBookingData,
+            id = _this$state$updateBoo.id,
+            host_id = _this$state$updateBoo.host_id,
+            purpose = _this$state$updateBoo.purpose,
+            pax = _this$state$updateBoo.pax,
+            level_id = _this$state$updateBoo.level_id,
+            start_date = _this$state$updateBoo.start_date,
+            start_time = _this$state$updateBoo.start_time,
+            end_time = _this$state$updateBoo.end_time,
+            meeting_room_id = _this$state$updateBoo.meeting_room_id,
+            status_id = _this$state$updateBoo.status_id;
+        axios__WEBPACK_IMPORTED_MODULE_3___default().put('http://127.0.0.1:8000/api/bookings/update/' + id, {
+          host_id: host_id,
+          purpose: purpose,
+          pax: pax,
+          level_id: level_id,
+          start_date: start_date,
+          start_time: start_time,
+          end_time: end_time,
+          meeting_room_id: meeting_room_id,
+          status_id: status_id
+        }).then(function (response) {
+          _this3.setState({
+            updateNotiModal: true,
+            updateBookingData: {
+              id: "",
+              host_id: "",
+              purpose: "",
+              pax: "",
+              level_id: "",
+              start_date: "",
+              start_time: "",
+              end_time: "",
+              meeting_room_id: "",
+              status_id: 1
+            },
+            updateBookingModal: false
+          });
+
+          _this3.loadBooking();
         });
-
-        _this3.loadBooking();
-      });
+      } else {
+        alert("This timeslot is not available. Please choose another timeslot or meeting_room.");
+      }
     }
   }, {
     key: "deleteBooking",

@@ -57,7 +57,7 @@ class MeetingRoomBookingController extends Controller
         $data = array();
         $data['statuses'] = Status::all();
         $data['rooms'] = MeetingRoom::all();
-        // $data['bookings'] = MeetingRoomBooking::where('status_id',2)->get();
+        $data['bookings'] = MeetingRoomBooking::where('status_id',2)->get();
         $data['levels'] = Level::all();
         return view('admin-home')->with('data', json_encode($data));
     }
