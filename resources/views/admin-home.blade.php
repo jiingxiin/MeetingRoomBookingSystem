@@ -27,7 +27,7 @@
                 </div>
             @endif
 
-            <div id='adminhome'></div>
+            <div id='adminhome' data='{{$data}}'></div>
         </div>
     </body>
     <script src="/js/app.js"></script>

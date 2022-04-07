@@ -5331,9 +5331,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.modern.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.modern.js");
 /* harmony import */ var dateformat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dateformat */ "./node_modules/dateformat/lib/dateformat.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5363,32 +5365,50 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
 var AdminHome = /*#__PURE__*/function (_Component) {
   _inherits(AdminHome, _Component);
 
   var _super = _createSuper(AdminHome);
 
-  function AdminHome() {
+  function AdminHome(props) {
     var _this;
 
     _classCallCheck(this, AdminHome);
 
-    _this = _super.call(this);
+    _this = _super.call(this, props);
+    console.log('data from component', JSON.parse(_this.props.data));
     _this.state = {
+      data: JSON.parse(_this.props.data),
       bookings: [],
       status: 1,
       newBookingData: {
-        host: "",
+        host_id: "",
         purpose: "",
         pax: "",
         level_id: "",
         start_date: "",
         start_time: "",
-        duration: "",
         end_time: "",
         meeting_room_id: "",
         status_id: 1
-      }
+      },
+      updateBookingModal: false,
+      updateBookingData: {
+        id: "",
+        host_id: "",
+        purpose: "",
+        pax: "",
+        level_id: "",
+        start_date: "",
+        start_time: "",
+        end_time: "",
+        meeting_room_id: "",
+        status_id: 1
+      },
+      updateNotiModal: false,
+      deleteNotiModal: false
     };
     return _this;
   }
@@ -5398,7 +5418,7 @@ var AdminHome = /*#__PURE__*/function (_Component) {
     value: function loadBooking() {
       var _this2 = this;
 
-      axios.get('http://127.0.0.1:8000/api/bookings').then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_3___default().get('http://127.0.0.1:8000/api/bookings').then(function (response) {
         _this2.setState({
           bookings: response.data
         });
@@ -5410,47 +5430,149 @@ var AdminHome = /*#__PURE__*/function (_Component) {
       this.loadBooking();
     }
   }, {
+    key: "toggleUpdateBookingModal",
+    value: function toggleUpdateBookingModal(id, host_id, purpose, pax, level_id, start_date, start_time, end_time, meeting_room_id, status_id) {
+      console.log('clikec');
+      console.log(this.state.updateBookingModal);
+      this.setState({
+        updateBookingData: {
+          id: id,
+          host_id: host_id,
+          purpose: purpose,
+          pax: pax,
+          level_id: level_id,
+          start_date: start_date,
+          start_time: start_time,
+          end_time: end_time,
+          meeting_room_id: meeting_room_id,
+          status_id: status_id
+        },
+        updateBookingModal: !this.state.updateBookingModal
+      });
+    }
+  }, {
+    key: "toggleUpdateModal",
+    value: function toggleUpdateModal() {
+      this.setState({
+        updateNotiModal: false
+      });
+    }
+  }, {
+    key: "toggleDeleteModal",
+    value: function toggleDeleteModal() {
+      this.setState({
+        deleteNotiModal: false
+      });
+    }
+  }, {
+    key: "updateBooking",
+    value: function updateBooking() {
+      var _this3 = this;
+
+      var _this$state$updateBoo = this.state.updateBookingData,
+          id = _this$state$updateBoo.id,
+          host_id = _this$state$updateBoo.host_id,
+          purpose = _this$state$updateBoo.purpose,
+          pax = _this$state$updateBoo.pax,
+          level_id = _this$state$updateBoo.level_id,
+          start_date = _this$state$updateBoo.start_date,
+          start_time = _this$state$updateBoo.start_time,
+          end_time = _this$state$updateBoo.end_time,
+          meeting_room_id = _this$state$updateBoo.meeting_room_id,
+          status_id = _this$state$updateBoo.status_id;
+      axios__WEBPACK_IMPORTED_MODULE_3___default().put('http://127.0.0.1:8000/api/bookings/update/' + id, {
+        host_id: host_id,
+        purpose: purpose,
+        pax: pax,
+        level_id: level_id,
+        start_date: start_date,
+        start_time: start_time,
+        end_time: end_time,
+        meeting_room_id: meeting_room_id,
+        status_id: status_id
+      }).then(function (response) {
+        console.log("execute");
+
+        _this3.setState({
+          updateNotiModal: true,
+          updateBookingData: {
+            id: "",
+            host_id: "",
+            purpose: "",
+            pax: "",
+            level_id: "",
+            start_date: "",
+            start_time: "",
+            end_time: "",
+            meeting_room_id: "",
+            status_id: 1
+          },
+          updateBookingModal: false
+        });
+
+        _this3.loadBooking();
+      });
+    }
+  }, {
+    key: "deleteBooking",
+    value: function deleteBooking(id) {
+      var _this4 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_3___default()["delete"]('http://127.0.0.1:8000/api/bookings/delete/' + id).then(function (response) {
+        _this4.setState({
+          deleteNotiModal: true,
+          deleteBookingModal: true
+        });
+
+        _this4.loadBooking();
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var bookings = this.state.bookings.map(function (booking) {
-        var status = booking.status_id;
-        var status_name;
+      var _this5 = this;
 
-        if (status == '1') {
-          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+      var bookings = this.state.bookings.map(function (booking) {
+        var status_id = booking.status_id;
+        var status_name = "";
+
+        if (status_id == '1') {
+          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
             children: "Pending"
           });
-        } else if (status == '2') {
-          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+        } else if (status_id == '2') {
+          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
             children: "Approve"
           });
-        } else if (status == '3') {
-          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+        } else if (status_id == '3') {
+          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
             children: "Cancel"
           });
-        } else if (status == '4') {
-          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+        } else if (status_id == '4') {
+          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
             children: "Deny"
           });
         } else {
-          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+          status_name = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
             children: booking.status_id
           });
         }
 
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
             children: booking.id
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
-            children: booking.host
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
+            children: booking.host_id
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
             children: booking.start_date
-          }), status_name, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("td", {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.Button, {
+          }), status_name, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("td", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Button, {
+              onClick: _this5.toggleUpdateBookingModal.bind(_this5, booking.id, booking.host_id, booking.purpose, booking.pax, booking.level_id, booking.start_date, booking.start_time, booking.end_time, booking.meeting_room_id, booking.status_id),
               color: "success",
               size: "sm",
               children: "Edit"
-            }), '  ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.Button, {
+            }), '  ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Button, {
+              onClick: _this5.deleteBooking.bind(_this5, booking.id),
               color: "danger",
               size: "sm",
               children: "Delete"
@@ -5458,27 +5580,302 @@ var AdminHome = /*#__PURE__*/function (_Component) {
           })]
         }, booking.id);
       });
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+      var status = this.state.data.statuses.map(function (s) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
+          value: s.id,
+          children: s.status
+        }, s.id);
+      });
+      var rooms = this.state.data.rooms.map(function (r) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
+          value: r.id,
+          children: r.name
+        }, r.id);
+      });
+      var levels = this.state.data.levels.map(function (l) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
+          value: l.id,
+          children: l.level
+        }, l.id);
+      });
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
         className: "container",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.Table, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("thead", {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Table, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("thead", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("tr", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
                 children: "ID"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
-                children: "Host"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
+                children: "Host ID"
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
                 children: "Booking Date"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
                 children: "Status"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
                 children: "Operations"
               })]
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tbody", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tbody", {
             children: bookings
           })]
-        })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Modal, {
+          isOpen: this.state.updateBookingModal,
+          toggle: this.toggleUpdateBookingModal.bind(this),
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.ModalHeader, {
+            children: "Update Booking"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.ModalBody, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Form, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "host_id",
+                  sm: 2,
+                  children: "ID"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "host_id",
+                    name: "host_id",
+                    value: this.state.updateBookingData.host_id,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.host_id = e.target.value;
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "text"
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "purpose",
+                  sm: 2,
+                  children: "Purpose"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "purpose",
+                    name: "purpose",
+                    value: this.state.updateBookingData.purpose,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.purpose = e.target.value;
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "textarea"
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "pax",
+                  sm: 2,
+                  children: "Pax"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "pax",
+                    name: "pax",
+                    value: this.state.updateBookingData.pax,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.pax = e.target.value;
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "number"
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "level",
+                  sm: 2,
+                  children: "Level"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "level",
+                    name: "level",
+                    value: this.state.updateBookingData.level_id,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.level_id = e.target.value;
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "select",
+                    children: levels
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "start-date",
+                  sm: 2,
+                  children: "Start Date"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "start-date",
+                    name: "start-date",
+                    value: this.state.updateBookingData.start_date,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.start_date = e.target.value;
+                      (0,dateformat__WEBPACK_IMPORTED_MODULE_2__["default"])(updateBookingData.start_date, "yyyy-mm-dd");
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "date"
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+                children: this.state.updateBookingData.start_date
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "start-time",
+                  sm: 2,
+                  children: "Start Time"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "start-time",
+                    name: "start-time",
+                    value: this.state.updateBookingData.start_time,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.start_time = e.target.value; // dateFormat(newBookingData.start_time, "isoTime")
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "text"
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "end-time",
+                  sm: 2,
+                  children: "End Time"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "end-time",
+                    name: "end-time",
+                    value: this.state.updateBookingData.end_time,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.end_time = e.target.value; // dateFormat(newBookingData.end_time, "HH:MM:ss")
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "text"
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "meeting-room",
+                  sm: 2,
+                  children: "Meeting Room"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "meeting-room",
+                    name: "meeting-room",
+                    value: this.state.updateBookingData.meeting_room_id,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.meeting_room_id = e.target.value;
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "select",
+                    children: rooms
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
+                row: true,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
+                  "for": "status",
+                  sm: 2,
+                  children: "Status"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
+                  sm: 10,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
+                    id: "status",
+                    name: "status",
+                    value: this.state.updateBookingData.status_id,
+                    onChange: function onChange(e) {
+                      var updateBookingData = _this5.state.updateBookingData;
+                      updateBookingData.status_id = e.target.value;
+
+                      _this5.setState({
+                        updateBookingData: updateBookingData
+                      });
+                    },
+                    type: "select",
+                    children: status
+                  })
+                })]
+              })]
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.ModalFooter, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Button, {
+              color: "primary",
+              onClick: this.updateBooking.bind(this),
+              children: "Submit"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Button, {
+              color: "danger",
+              onClick: this.toggleUpdateBookingModal.bind(this),
+              children: "Cancel"
+            })]
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Modal, {
+          isOpen: this.state.updateNotiModal,
+          toggle: this.toggleUpdateModal.bind(this),
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.ModalHeader, {
+            children: "Booking Successfully Updated"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.ModalFooter, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Button, {
+              color: "primary",
+              onClick: this.toggleUpdateModal.bind(this),
+              children: "OK"
+            })
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Modal, {
+          isOpen: this.state.deleteNotiModal,
+          toggle: this.toggleDeleteModal.bind(this),
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.ModalHeader, {
+            children: "Booking Successfully Deleted"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.ModalFooter, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Button, {
+              color: "primary",
+              onClick: this.toggleDeleteModal.bind(this),
+              children: "OK"
+            })
+          })]
+        })]
       });
     }
   }]);
@@ -5490,7 +5887,10 @@ var AdminHome = /*#__PURE__*/function (_Component) {
 
 
 if (document.getElementById('adminhome')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(AdminHome, {}), document.getElementById('adminhome'));
+  var data = document.getElementById('adminhome').getAttribute('data');
+  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(AdminHome, {
+    data: data
+  }), document.getElementById('adminhome'));
 } // Date.prototype.addMinutes = function(minutes) {
 //     this.setMinutes(this.getMinutes() + minutes);
 //     console.log(this);
@@ -5566,7 +5966,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
       available: true,
       status: 1,
       newBookingData: {
-        host: "",
+        host_id: "",
         purpose: "",
         pax: "",
         level_id: "",
@@ -5632,7 +6032,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
           available: true,
           status: 1,
           newBookingData: {
-            host: "",
+            host_id: "",
             purpose: "",
             pax: "",
             level_id: "",
@@ -5645,6 +6045,7 @@ var UserCreate = /*#__PURE__*/function (_Component) {
           }
         });
       });
+      location.replace("user/home");
     }
   }, {
     key: "render",
@@ -5677,24 +6078,24 @@ var UserCreate = /*#__PURE__*/function (_Component) {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
             row: true,
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Label, {
-              "for": "host",
+              "for": "host_id",
               sm: 2,
-              children: "Host"
+              children: "Host ID"
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Col, {
               sm: 10,
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.Input, {
-                id: "host",
-                name: "host",
-                placeholder: "name",
+                id: "host_id",
+                name: "host_id",
+                placeholder: "host ID",
                 onChange: function onChange(e) {
                   var newBookingData = _this4.state.newBookingData;
-                  newBookingData.host = e.target.value;
+                  newBookingData.host_id = e.target.value;
 
                   _this4.setState({
                     newBookingData: newBookingData
                   });
                 },
-                type: "text"
+                type: "number"
               })
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.FormGroup, {
@@ -68992,7 +69393,7 @@ var polyfill = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/","#USER"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"C:\\\\Users\\\\USER\\\\Documents\\\\Laravel\\\\Meeting_Room_Booking_System","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
+module.exports = JSON.parse('{"_args":[["axios@0.21.4","C:\\\\Users\\\\step\\\\Desktop\\\\UECS3294 ADVANCED WEB APPLICATION DEVELOPMENT\\\\Exercise\\\\MeetingRoomBookingSystem"]],"_development":true,"_from":"axios@0.21.4","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.21.4","name":"axios","escapedName":"axios","rawSpec":"0.21.4","saveSpec":null,"fetchSpec":"0.21.4"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_spec":"0.21.4","_where":"C:\\\\Users\\\\step\\\\Desktop\\\\UECS3294 ADVANCED WEB APPLICATION DEVELOPMENT\\\\Exercise\\\\MeetingRoomBookingSystem","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 

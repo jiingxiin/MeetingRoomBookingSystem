@@ -25,9 +25,10 @@ Route::get('/create', [MeetingRoomBookingController::class, 'passInfo']);
 // Route::get('/create', [MeetingRoomBookingController::class, 'dropDownMeetingRoom']);
 // Route::get('/create', [MeetingRoomController::class, 'dropDownMeetingRoom']);
 
-Route::get('/admin/home', function () {
-    return view('admin-home');
-});
+// Route::get('/admin/home', function () {
+//     return view('admin-home');
+// });
+Route::get('/admin/home', [MeetingRoomBookingController::class, 'passInfoAdmin']);
 
 Route::get('/user/home', function () {
     return view('user-home');
